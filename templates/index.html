@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock title %}
+{% block body %}
+
+<div class="container my-4">
+    <h2>Add A ToDo</h2>
+    <form action="/" method="POST">
+        <div class="mb-3">
+            <label for="title" class="form-label">ToDo Title</label>
+            <input type="text" class="form-control" name="title" id="title" placeholder="Enter title">
+        </div>
+        <div class="mb-3">
+            <label for="desc" class="form-label">ToDo Description</label>
+            <input type="text" class="form-control" name="desc" id="desc" placeholder="Enter description">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+<div class="container my-3">
+    <h2>My ToDos</h2>
+
+    {% if allTodo.items|length == 0 %}
+        <div class="alert alert-danger" role="alert">
+            No ToDos Found. Add Your First ToDo Now!
+        </div>
+    {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Sr. No.</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for todo in allTodo.items %}
+                <tr>
+                    <th scope="row">{{ loop.index + ((allTodo.page - 1) * allTodo.per_page) }}</th>
+                    <td>{{ todo.title }}</td>
+                    <td>{{ todo.desc }}</td>
+                    <td>{{ todo.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>
+                        <a href="/update/{{ todo.sno }}">
+                            <button type="button" class="btn btn-outline-primary btn-sm mx-1">Edit</button>
+                        </a>
+                        <a href="/delete/{{ todo.sno }}">
+                            <button type="button" class="btn btn-danger btn-sm mx-1">Delete</button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination Navigation -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if allTodo.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ allTodo.prev_num }}">Previous</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
+                {% endif %}
+
+                {% for page_num in allTodo.iter_pages(left_edge=2, right_edge=2, left_current=2, right_current=2) %}
+                    {% if page_num %}
+                        {% if page_num == allTodo.page %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                        {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                        </li>
+                        {% endif %}
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">…</span>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if allTodo.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ allTodo.next_num }}">Next</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+
+{% endblock body %}

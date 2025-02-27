@@ -1,0 +1,13 @@
+fenv/
+
+test_app.py
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
