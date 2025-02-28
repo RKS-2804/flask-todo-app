@@ -1,0 +1,8 @@
+flask
+sqlalchemy
+Flask-SQLAlchemy
+asyncmy
+pymysql
+pytest
+python-dotenv
+
